@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+@import "tailwindcss";
+
+
+@theme{
+  --color-mint:#E0E0E0;
+  --color-flow:#121212;
+  --color-rich:#4A4E69;  
+  --font-oswald:'Oswald', sans-serif;
+  --font-alfa:"Alfa Slab One", serif;
+  --font-abritl:"Abril Fatface", serif;
+
+}
