@@ -1,8 +1,33 @@
-// src/components/MultipleBarChart.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import { getmonthlyData } from '../controller/incomecontroller'; // Make sure this function is implemented and returns correct monthly data
 
 const BarChart = () => {
+  const [chartSeries, setChartSeries] = useState([
+    { name: 'Amount spent', data: [] },
+    { name: 'Amount Remaining', data: [] }
+  ]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getmonthlyData(); // Expected: { Jan: {amountSpent, amountRemaining}, Feb: {...}, ... }
+      console.log('Monthly Data:', data);
+
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+      const spentData = months.map(month => data[month]?.amountSpent || 0);
+      const remainingData = months.map(month => data[month]?.amountRemaining || 0);
+
+      setChartSeries([
+        { name: 'Amount spent', data: spentData },
+        { name: 'Amount Remaining', data: remainingData }
+      ]);
+    };
+
+    fetch();
+  }, []);
+
   const options = {
     chart: {
       type: 'bar',
@@ -56,24 +81,13 @@ const BarChart = () => {
     tooltip: {
       y: {
         formatter: (value) =>
-          `$${value >= 1000 ? `${value / 1000}k` : value}`
+          `$${value >= 1000 ? `${value / 1000}K` : value}`
       }
     },
     colors: ['#4A4E69', '#C9ADA7']
   };
 
-  const series = [
-    {
-      name: 'Amount spent',
-      data: [23000, 44000, 55000, 57000, 56000, 61000, 58000, 63000, 60000, 66000, 34000, 78000]
-    },
-    {
-      name: 'Amount Remaining',
-      data: [17000, 76000, 85000, 101000, 98000, 87000, 105000, 91000, 114000, 94000, 67000, 66000]
-    }
-  ];
-
-  return <Chart options={options} series={series} type="bar" height={300} />;
+  return <Chart options={options} series={chartSeries} type="bar" height={300} />;
 };
 
 export default BarChart;
