@@ -87,8 +87,88 @@ const getMonthlyData = async (uid) => {
   return monthlyData;
 };
 
+const income = async (uid, incomeData) => {
+  const incomeRef = db.collection('incomes').doc(uid);
+  const doc = await incomeRef.get();
+
+  let currentEntries = [];
+  if (doc.exists) {
+    const data = doc.data();
+    currentEntries = data.entries || [];
+  }
+
+  const Amount = parseFloat(incomeData.Amount) || 0;
+
+
+  const incometEntry = {
+    ...incomeData,
+    Amount
+  };
+
+  currentEntries.push(incometEntry);
+
+  await incomeRef.set({ entries: currentEntries }, { merge: true });
+};
+
+const getincome = async (uid) => {
+  const doc = await db.collection('incomes').doc(uid).get();
+  if (doc.exists) {
+    const data = doc.data();
+    return data.entries || [];
+  }
+  return [];
+};
+
+const getExpense = async (uid) => {
+  const doc = await db.collection('budgets').doc(uid).get();
+  if (!doc.exists) return [];
+
+  const data = doc.data();
+  const entries = data.entries || [];
+
+  const currentYear = new Date().getFullYear();
+  const dailyTotals = {};
+
+  // Step 1: Sum amountSpent for each day in current year
+  for (const entry of entries) {
+    if (!entry.date || !entry.amountSpent) continue;
+
+    const dateObj = new Date(entry.date);
+    if (dateObj.getFullYear() !== currentYear) continue;
+
+    const dateStr = dateObj.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const amount = parseFloat(entry.amountSpent) || 0;
+
+    if (!dailyTotals[dateStr]) {
+      dailyTotals[dateStr] = 0;
+    }
+    dailyTotals[dateStr] += amount;
+  }
+
+  // Step 2: Create result for all days from Jan 1st to tomorrow
+  const result = [];
+  const startDate = new Date(currentYear, 0, 1); // Jan 1st
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  // Important: Clone the date object to avoid mutation issues
+  for (let d = new Date(startDate); d <= tomorrow; d.setDate(d.getDate() + 1)) {
+    const dateStr = new Date(d).toISOString().split('T')[0];
+    result.push({
+      date: dateStr,
+      amount: dailyTotals[dateStr] || 0,
+    });
+  }
+
+  return result;
+};
+
+
 module.exports = {
   budget,
   getBudget,
   getMonthlyData,
+  income,
+  getincome,
+  getExpense
 };

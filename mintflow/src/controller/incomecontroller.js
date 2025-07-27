@@ -24,3 +24,21 @@ export const getmonthlyData=async()=>{
     const res=await axios.get(`${MONEY_URL}getmonthlydata`,{headers})
     return res.data;
 }
+
+export const addincome=async(incomeData)=>{
+    const headers=await getAuthHeader();
+    const res=await axios.post(`${MONEY_URL}income`,incomeData,{headers})
+    return res.data;
+}
+
+export const getincome=async()=>{
+    const headers=await getAuthHeader();
+    const res=await axios.get(`${MONEY_URL}getincome`,{headers})
+    return res.data;
+}
+
+export const getSpent=async()=>{
+    const headers= await getAuthHeader();
+    const res=await axios.get(`${MONEY_URL}getexpense`,{headers});
+    return res.data;
+}

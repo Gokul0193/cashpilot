@@ -75,9 +75,9 @@ const Budget = () => {
                                         <tr key={index} className="odd:bg-white even:bg-rich even:text-white text-center font-oswald text-xl">
                                             <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{item.category}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">${item.amountAllocated}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">${item.amountSpent}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">${item.amountRemaining}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.amountAllocated} Rs</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.amountSpent} Rs</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.amountRemaining} Rs</td>
                                         </tr>
                                     ))
                                }

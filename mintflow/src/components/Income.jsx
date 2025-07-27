@@ -1,10 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
+
 import AddIncome from './AddIncome';
+import { getincome } from '../controller/incomecontroller';
 const Income = () => {
     const [isaddIncome,setIsAddIncome]=useState(false)
+    const [income,setIncome]=useState([])
+    useEffect(()=>{
+        const fetch=async()=>{
+          const data=  await getincome()
+          console.log(data);
+          setIncome(data)
+          
+        }
+        fetch()
+    },[])
   return (
     <div className='flex flex-col gap-10 p-10 '>
      
@@ -38,28 +49,22 @@ const Income = () => {
                             </thead>
 
                             <tbody>
-                                <tr className="odd:bg-white even:bg-rich even:text-white text-center font-oswald text-xl">
-                                    <td className="px-6 py-4 whitespace-nowrap  ">2025-05-10</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Salary</td>
-                                    <td className="px-6 py-4 whitespace-nowrap  ">$1200</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Bank Transfer</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Monthly</td>
-                                   <td className="px-6 py-4 whitespace-nowrap flex items-center justify-center gap-5 "><button className='border-2 border-rich p-2 rounded cursor-pointer'><MdOutlineModeEdit /></button> <button className='border-2 border-rich p-2 rounded cursor-pointer'><MdDeleteOutline /></button></td>
-              
+                                {
+                                    income.map((item,index)=>{
+                                        return  <tr key={index} className="odd:bg-white even:bg-rich even:text-white text-center font-oswald text-xl">
+                                            <td className="px-6 py-4 whitespace-nowrap  ">{item.date}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap ">{item.Category}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap  ">{item.Amount}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap ">{item.PaymentMethod}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap ">{item.Frequency}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap flex items-center justify-center gap-5 "><button className='border-2 odd:border-rich even:border-white p-2 rounded cursor-pointer'><MdOutlineModeEdit /></button> <button className='border-2 border-rich p-2 rounded cursor-pointer'><MdDeleteOutline /></button></td>
+                    
                                 </tr>
+                                    })
+                                }
+                               
 
-                                <tr className="odd:bg-white even:bg-rich even:text-white text-center font-oswald text-xl">
-                                    <td className="px-6 py-4 whitespace-nowrap  ">2025-05-10</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Salary</td>
-                                    <td className="px-6 py-4 whitespace-nowrap  ">$1200</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Bank Transfer</td>
-                                    <td className="px-6 py-4 whitespace-nowrap ">Monthly</td>
-                                   <td className="px-6 py-4 whitespace-nowrap flex items-center justify-center gap-5 ">
-                                        <button className='border-2 border-current text-inherit p-2 rounded cursor-pointer'><MdOutlineModeEdit /></button>
-                                        <button className='border-2 border-current text-inherit p-2 rounded cursor-pointer' ><MdDeleteOutline /></button>
-                                   </td>
-              
-                                </tr>
+                                
                                  
                             </tbody>
                         </table>
